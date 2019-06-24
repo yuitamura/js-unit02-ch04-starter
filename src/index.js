@@ -1,14 +1,34 @@
 class Character {
-  constructor() {
+  constructor(props) {
+    this.Name = props.name
+    this.HP = props.HP
+    this.initialHP = props.initialHP
+    this.MP = props.MP
+    this.initialMP = props.initialMP
+    this.offensePower = props.offensePower
+    this.defencePower = props.defencePower
   }
 
   showStatus() {
+    const mainEl = document.getElementById('main');
+    mainEl.innerHTML = `
+    <p>キャラクター名：${props.name}</p>
+    <p>体力：${props.HP}</p>
+    <p>魔法力：${props.MP}</p>
+    `
     /* 
       キャラクターの名前、HP、MPを表示する。
     */
   }
 
   attack(defender) {
+    if (props.HP = 0) {
+      return this[`_${defender}`];
+      const mainEl = document.getElementById('main');
+      mainEl.innerHTML = "キャラクターは死亡しています。攻撃できません。"
+    } else {
+      
+    }
     /*
       キャラクターが死んでいる場合は攻撃出来ないので、それを表示する。
       死んでいない場合は相手に与えたダメージを表示。
