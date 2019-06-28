@@ -50,7 +50,7 @@ class Character {
       return
     }
 
-    const theirDamage = defender.defencePower - this.offensePower;
+    const theirDamage = defender.offensePower - this.defencePower;
     if (theirDamage < 0) {
       mainEl.innerHTML = console.log("1");
     } else {
