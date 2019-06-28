@@ -42,11 +42,20 @@ class Character {
   }
 
   calcAttackDamage(defender) {
-    const damage = this.offensePower - defender.defencePower;
-    if (damage < 0) {
+    const myDamage = this.offensePower - defender.defencePower;
+    if (myDamage < 0) {
       mainEl.innerHTML = console.log("1");
     } else {
-      mainEl.innerHTML = damage;
+      mainEl.innerHTML = myDamage;
+      return
+    }
+
+    const theirDamage = defender.defencePower - this.offensePower;
+    if (theirDamage < 0) {
+      mainEl.innerHTML = console.log("1");
+    } else {
+      mainEl.innerHTML = theirDamage;
+      return
     }
     /*
       ダメージは単純に攻撃力から防御力を引いて計算する。
