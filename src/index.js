@@ -1,20 +1,21 @@
+const mainEl = document.getElementById('main');
+
 class Character {
   constructor(props) {
-    this.Name = props.name
-    this.HP = props.HP
+    this.name = props.name // 大文字だとクラス名に見える
+    this.hp = props.hp
     this.initialHP = props.initialHP
-    this.MP = props.MP
+    this.mp = props.mp
     this.initialMP = props.initialMP
     this.offensePower = props.offensePower
     this.defencePower = props.defencePower
   }
 
   showStatus() {
-    const mainEl = document.getElementById('main');
     mainEl.innerHTML = `
-    <p>キャラクター名：${props.name}</p>
-    <p>体力：${props.HP}</p>
-    <p>魔法力：${props.MP}</p>
+    <p>キャラクター名：${this.name}</p>
+    <p>体力：${this.hp}</p>
+    <p>魔法力：${this.mp}</p>
     `
     /* 
       キャラクターの名前、HP、MPを表示する。
@@ -22,12 +23,16 @@ class Character {
   }
 
   attack(defender) {
-    if (props.HP = 0) {
-      return this[`_${defender}`];
-      const mainEl = document.getElementById('main');
-      mainEl.innerHTML = "キャラクターは死亡しています。攻撃できません。"
-    } else {
-      
+    if (this.hp <= 0) {
+      mainEl.innerHTML = `${this.name}は死亡しています。攻撃できません。`
+      return // 句読点として、このif文は完結
+    }
+    if (defender.hp <= 0) {
+      mainEl.innerHTML = `${defender.name}は死亡しています。攻撃できません。`
+      return
+    }
+    if (this.hp > 0) {
+      return this.calcAttackDamage();
     }
     /*
       キャラクターが死んでいる場合は攻撃出来ないので、それを表示する。
@@ -37,6 +42,12 @@ class Character {
   }
 
   calcAttackDamage(defender) {
+    const damage = this.offensePower - defender.defencePower;
+    if (damage < 0) {
+      mainEl.innerHTML = console.log("1");
+    } else {
+      mainEl.innerHTML = damage;
+    }
     /*
       ダメージは単純に攻撃力から防御力を引いて計算する。
       ダメージが0未満の場合は、最低のダメージ1を与える。
