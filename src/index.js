@@ -23,16 +23,21 @@ class Character {
   }
 
   attack(defender) {
+    let remHp = defender.hp - this.damage; // 残りのHP = 相手のHP - キャラクターが与えるダメージ？
     if (this.hp <= 0) {
       mainEl.innerHTML = `${this.name}は死亡しています。攻撃できません。`
       return // 句読点として、このif文は完結
     }
-    if (defender.hp <= 0) {
-      mainEl.innerHTML = `${defender.name}は死亡しています。攻撃できません。`
+    if (remHp <= 0) {
+      mainEl.innerHTML = `
+      ${this.calcAttackDamage(defender)}
+      ${defender.name}は死亡しています。攻撃できません。
+      `
       return
     }
-    if (this.hp > 0) {
-      return this.calcAttackDamage();
+    if (remHp > 0) {
+      mainEl.innerHTML = this.calcAttackDamage(defender);
+      return
     }
     /*
       キャラクターが死んでいる場合は攻撃出来ないので、それを表示する。
@@ -42,20 +47,11 @@ class Character {
   }
 
   calcAttackDamage(defender) {
-    const myDamage = this.offensePower - defender.defencePower;
-    if (myDamage < 0) {
-      mainEl.innerHTML = console.log("1");
+    let damage = this.offensePower - defender.defencePower;
+    if (damage <= 0) {
+      damage = 1;
     } else {
-      mainEl.innerHTML = myDamage;
-      return
-    }
-
-    const theirDamage = defender.offensePower - this.defencePower;
-    if (theirDamage < 0) {
-      mainEl.innerHTML = console.log("1");
-    } else {
-      mainEl.innerHTML = theirDamage;
-      return
+      return damage;
     }
     /*
       ダメージは単純に攻撃力から防御力を引いて計算する。
