@@ -23,20 +23,19 @@ class Character {
   }
 
   attack(defender) {
-    let remHp = defender.hp - this.damage; // 残りのHP = 相手のHP - キャラクターが与えるダメージ？
     if (this.hp <= 0) {
       mainEl.innerHTML = `${this.name}は死亡しています。攻撃できません。`
       return // 句読点として、このif文は完結
     }
-    if (remHp <= 0) {
-      mainEl.innerHTML = `
-      ${this.calcAttackDamage(defender)}
-      ${defender.name}は死亡しています。攻撃できません。
-      `
+    if (defender.hp <= 0) {
+      mainEl.innerHTML = `${defender.name}は死亡しています。攻撃できません。`
       return
     }
-    if (remHp > 0) {
-      mainEl.innerHTML = this.calcAttackDamage(defender);
+    const attackDamage = this.calcAttackDamage(defender); // thisも含められる
+    if (defender.hp <= 0) {
+      mainEl.innerHTML = attackDamage;
+    } else {
+      mainEl.innerHTML = attackDamage;
       return
     }
     /*
