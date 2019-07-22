@@ -1,5 +1,3 @@
-const mainEl = document.getElementById('main');
-
 class Character { // どのキャラにも当てはまる
   constructor(props) {
     this.name = props.name // 大文字だとクラス名に見える
@@ -12,34 +10,44 @@ class Character { // どのキャラにも当てはまる
   }
 
   showStatus() {
-    const status = document.createElement('p');
-    status.innerHTML = `
-    <p>キャラクター名：${this.name}</p>
-    <p>体力：${this.hp}</p>
-    <p>魔法力：${this.mp}</p>
+    const mainEl = document.getElementById('main');
+    const div = document.createElement('div'); // DOMとわかる名前
+    div.innerHTML = `
+    キャラクター名：${this.name}<br>
+    体力：${this.hp}<br>
+    魔法力：${this.mp}<br><br>
     `
-
-    mainEl.appendChild(status);
+    mainEl.appendChild(div);
     /* 
       キャラクターの名前、HP、MPを表示する。
     */
   }
 
   attack(defender) {
-    const attackDamage = this.calcAttackDamage(defender); // thisも含められる
+    const mainEl = document.getElementById('main');
+    const div = document.createElement('div');
+    const attackDamage = this.calcAttackDamage(defender); // thisも含められる、関連のあるところにまとめる
     defender.hp = defender.hp - attackDamage;
-
+    if (defender.hp <= 0) {
+      div.innerHTML = `
+      ${this.name}が${defender.name}に${attackDamage}のダメージを与えました。
+      `
+    } else {
+      div.innerHTML = `${this.name}が${defender.name}に${attackDamage}のダメージを与えました。`
+    }
+    mainEl.appendChild(div); // 1行にまとめる
+    // 区切りの改行
     if (this.hp <= 0) {
-      mainEl.innerHTML = `${this.name}は死亡しています。攻撃できません。`
+      div.innerHTML = `${this.name}は死亡しています。攻撃できません。`
+      mainEl.appendChild(div);
       return // 句読点として、このif文は完結
     }
     if (defender.hp <= 0) {
-      mainEl.innerHTML = `
-      ${this.name}が${defender.name}に${attackDamage}のダメージを与えました。
+      div.innerHTML = `
       ${defender.name}は死亡しています。攻撃できません。
       `
-    } else {
-      mainEl.innerHTML = `${this.name}が${defender.name}に${attackDamage}のダメージを与えました。`
+      mainEl.appendChild(div);
+      return
     }
     /*
       キャラクターが死んでいる場合は攻撃出来ないので、それを表示する。
@@ -63,30 +71,36 @@ class Character { // どのキャラにも当てはまる
 }
 
 class Sorcerer extends Character {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
 
   healSpell(target) {
+    /*
+    const mainEl = document.getElementById('main');
+    const div = document.createElement('div');
     if (target.hp <= 0) {
-      mainEl.innerHTML = `
+      div.innerHTML = `
       ${target.name}は死亡しています。回復魔法は使えません。
       `
+      mainEl.appendChild(div);
     } else {
       target.hp = target.hp + 15;
     }
 
-    if (sourcerer.mp > 3) {
-      sourcerer.mp = sourcerer.mp - 3;
+    if (this.sourcerer.mp > 3) {
+      props.sourcerer.mp = this.sourcerer.mp - 3;
     } else {
-      mainEl.innerHTML = `
+      div.innerHTML = `
       ${sourcerer.name}のMPが不足しています。回復魔法は使えません。
       `
+      mainEl.appendChild(div);
     }
-    if (sourcerer.hp <= 0) {
-      mainEl.innerHTML = `
+    if (props.sourcerer.hp <= 0) {
+      div.innerHTML = `
       ${sourcerer.name}は死亡しています。回復魔法は使えません。
       `
+      mainEl.appendChild(div);
       return
     }
     /* 
@@ -98,7 +112,9 @@ class Sorcerer extends Character {
     */
   }
 
+  
   fireSpell(target) {
+    /*
     if (target.hp <= 0) {
       mainEl.innerHTML = `
       ${target.name}は死亡しています。攻撃魔法は使えません。
@@ -153,6 +169,9 @@ class Sorcerer extends Character {
     defencePower: 10
   })
 
+  fighter.showStatus(); // showStatus関数を他の関数より後に呼び出すと、正常な値が呼び出されない
+  sorcerer.showStatus();
+  monster.showStatus();
   fighter.attack(monster);
   sorcerer.attack(monster);
   monster.attack(sorcerer);
@@ -162,7 +181,4 @@ class Sorcerer extends Character {
   fighter.attack(monster);
   sorcerer.fireSpell(monster);
   monster.attack(fighter);
-  fighter.showStatus();
-  sorcerer.showStatus();
-  monster.showStatus();
 }
