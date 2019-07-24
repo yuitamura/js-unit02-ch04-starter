@@ -2,9 +2,7 @@ class Character { // どのキャラにも当てはまる
   constructor(props) {
     this.name = props.name // 大文字だとクラス名に見える
     this.hp = props.hp
-    this.initialHP = props.initialHP
     this.mp = props.mp
-    this.initialMP = props.initialMP
     this.offensePower = props.offensePower
     this.defencePower = props.defencePower
   }
@@ -31,9 +29,12 @@ class Character { // どのキャラにも当てはまる
     if (defender.hp <= 0) {
       div.innerHTML = `
       ${this.name}が${defender.name}に${attackDamage}のダメージを与えました。
+      ${defender.name}は死亡しています。攻撃できません。 
       `
     } else {
-      div.innerHTML = `${this.name}が${defender.name}に${attackDamage}のダメージを与えました。`
+      div.innerHTML = `
+      ${this.name}が${defender.name}に${attackDamage}のダメージを与えました。
+      `
     }
     mainEl.appendChild(div); // 1行にまとめる
     // 区切りの改行
@@ -59,10 +60,11 @@ class Character { // どのキャラにも当てはまる
   calcAttackDamage(defender) {
     let damage = this.offensePower - defender.defencePower;
     if (damage <= 0) {
-      damage = 1;
+      damage = 1; // 代入しただけ、計算はしていない
     } else {
-      return damage;
+      return damage; // 省略できるが、ロジックを理解するために書く
     }
+    return damage;
     /*
       ダメージは単純に攻撃力から防御力を引いて計算する。
       ダメージが0未満の場合は、最低のダメージ1を与える。
@@ -76,29 +78,34 @@ class Sorcerer extends Character {
   }
 
   healSpell(target) {
-    /*
     const mainEl = document.getElementById('main');
     const div = document.createElement('div');
     if (target.hp <= 0) {
       div.innerHTML = `
       ${target.name}は死亡しています。回復魔法は使えません。
       `
-      mainEl.appendChild(div);
     } else {
       target.hp = target.hp + 15;
-    }
-
-    if (this.sourcerer.mp > 3) {
-      props.sourcerer.mp = this.sourcerer.mp - 3;
-    } else {
       div.innerHTML = `
-      ${sourcerer.name}のMPが不足しています。回復魔法は使えません。
+      ${target.name}の体力が15回復しました。
       `
       mainEl.appendChild(div);
     }
-    if (props.sourcerer.hp <= 0) {
+
+    if (target.mp > 3) {
+      target.mp = target.mp - 3;
       div.innerHTML = `
-      ${sourcerer.name}は死亡しています。回復魔法は使えません。
+      ${target.name}の魔法力を3消費しました。
+      `
+    } else {
+      div.innerHTML = `
+      ${target.name}の魔法力が不足しています。回復魔法は使えません。
+      `
+      mainEl.appendChild(div);
+    }
+    if (target.hp <= 0) {
+      div.innerHTML = `
+      ${target.name}は死亡しています。回復魔法は使えません。
       `
       mainEl.appendChild(div);
       return
@@ -114,26 +121,36 @@ class Sorcerer extends Character {
 
   
   fireSpell(target) {
-    /*
+    const mainEl = document.getElementById('main');
+    const div = document.createElement('div');
     if (target.hp <= 0) {
-      mainEl.innerHTML = `
+      div.innerHTML = `
       ${target.name}は死亡しています。攻撃魔法は使えません。
       `
     } else {
       target.hp = target.hp - 10;
+      div.innerHTML = `
+      ${target.name}に10のダメージを与えました。
+      `
+      mainEl.appendChild(div);
     }
 
-    if (sourcerer.mp > 2) {
-      sourcerer.mp = sourcerer.mp - 2;
+    if (target.mp > 2) {
+      target.mp = target.mp - 2;
+      div.innerHTML = `
+      ${target.name}の魔法力を2消費しました。
+      `
     } else {
-      mainEl.innerHTML = `
-      ${sourcerer.name}のMPが不足しています。回復魔法は使えません。
+      div.innerHTML = `
+      ${target.name}の魔法力が不足しています。回復魔法は使えません。
       `
+      mainEl.appendChild(div);
     }
-    if (sourcerer.hp <= 0) {
-      mainEl.innerHTML = `
-      ${sourcerer.name}は死亡しています。回復魔法は使えません。
+    if (target.hp <= 0) {
+      div.innerHTML = `
+      ${target.name}は死亡しています。回復魔法は使えません。
       `
+      mainEl.appendChild(div);
       return
     }
     /* 
@@ -169,9 +186,6 @@ class Sorcerer extends Character {
     defencePower: 10
   })
 
-  fighter.showStatus(); // showStatus関数を他の関数より後に呼び出すと、正常な値が呼び出されない
-  sorcerer.showStatus();
-  monster.showStatus();
   fighter.attack(monster);
   sorcerer.attack(monster);
   monster.attack(sorcerer);
@@ -181,4 +195,7 @@ class Sorcerer extends Character {
   fighter.attack(monster);
   sorcerer.fireSpell(monster);
   monster.attack(fighter);
+  fighter.showStatus();
+  sorcerer.showStatus();
+  monster.showStatus();
 }
